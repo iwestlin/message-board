@@ -1,9 +1,9 @@
-var config = {
+const config = {
   databaseURL: "https://jackslowfuck.firebaseio.com/"
 }
 firebase.initializeApp(config)
-var db = firebase.database()
-var postsRef = db.ref('posts')
+const db = firebase.database()
+let postsRef = db.ref('posts')
 displayPosts()
 
 function displayPosts () {
