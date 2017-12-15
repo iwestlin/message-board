@@ -67,5 +67,4 @@ function submit () {
   addPost(name.value || 'anonymous', msg.value)
   name.value = ''
   msg.value = ''
-  // window.scrollTo(0, document.body.scrollHeight)
 }
