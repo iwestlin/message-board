@@ -13,9 +13,9 @@ function displayPosts () {
     div.innerHTML = ''
     var posts = ss.val()
     posts = objToArray(posts)
-    posts.sort((x, y) => Number(x.date) - Number(y.date))
+    posts.sort((x, y) => Number(y.date) - Number(x.date))
     posts.forEach((post, index) => {
-      fragment.appendChild(createFieldset(post, index + 1))
+      fragment.appendChild(createFieldset(post, posts.length - index))
     })
     div.appendChild(fragment)
   })
@@ -67,5 +67,5 @@ function submit () {
   addPost(name.value || 'anonymous', msg.value)
   name.value = ''
   msg.value = ''
-  window.scrollTo(0, document.body.scrollHeight)
+  // window.scrollTo(0, document.body.scrollHeight)
 }
