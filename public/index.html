@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Talk to Wallace</title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    fieldset {
+      margin-top: 10px;
+      padding: 0 10px;
+      border: 1px dashed #777;
+    }
+    legend {
+      padding: 0 5px;
+      font-style: italic;
+    }
+    a {
+      text-decoration: none;
+    }
+    #msg {
+      width: 100%;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    #name {
+      width: 20%;
+    }
+    #type {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="type">
+    <textarea name="msg" id="msg" rows="5" placeholder="your message"></textarea>
+    <input type="text" name="name" id="name" placeholder="your name">
+    <button onclick="submit()">submit</button>
+  </div>
+  <div id="container"></div>
+  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+  <script src="./main.js"></script>
+</body>
+
+</html>
