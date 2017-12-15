@@ -61,7 +61,7 @@ function submit () {
   var name = document.getElementById('name')
   var msg = document.getElementById('msg')
   if (msg.value === '') {
-    alert('message can not be empty!')
+    alert('Message can not be empty!')
     return
   }
   addPost(name.value || 'anonymous', msg.value)
