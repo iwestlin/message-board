@@ -3,7 +3,7 @@ const config = {
 }
 firebase.initializeApp(config)
 const db = firebase.database()
-let postsRef = db.ref('posts')
+const postsRef = db.ref('posts')
 displayPosts()
 
 function displayPosts () {
