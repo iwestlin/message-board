@@ -1,7 +1,9 @@
 const md = window.markdownit()
 const config = {
-  databaseURL: "https://jackslowfuck.firebaseio.com/"
+  apiKey: "AIzaSyBo6_MpYasiBOK_tR3SNHMwOilK-hHnu9Q",
+  databaseURL: "https://jackslowfuck.firebaseio.com",
 }
+
 firebase.initializeApp(config)
 const db = firebase.database()
 const postsRef = db.ref('posts')
@@ -24,15 +26,8 @@ function displayPosts () {
 
 function createFieldset (post, id) {
   var lgdom = document.createElement('legend')
-  // var a = document.createElement('a')
-  // a.href = '#' + id
-  // a.innerText = '#' + id
-  // lgdom.appendChild(a)
-  // var text = document.createTextNode(' | ' + post.name + ' | ' + timeStampToLocalTime(post.date))
-  // lgdom.appendChild(text)
-  lgdom.innerText = '#' + id + ' | ' + post.name + ' | ' + timeStampToLocalTime(post.date)
+  lgdom.innerText = '#' + id + ' | ' + timeStampToLocalTime(post.date)
   var p = document.createElement('p')
-  // p.innerText = post.message
   p.innerHTML = md.render(post.message)
   var fsdom = document.createElement('fieldset')
   fsdom.id = String(id)
@@ -51,9 +46,8 @@ function objToArray (o) {
   return Object.keys(o || {}).map(key => o[key])
 }
 
-function addPost (name, message) {
+function addPost (message) {
   var data = {
-    name: name,
     message: message,
     date: Date.now()
   }
@@ -61,13 +55,33 @@ function addPost (name, message) {
 }
 
 function submit () {
-  var name = document.getElementById('name')
   var msg = document.getElementById('msg')
   if (msg.value === '') {
     alert('Message can not be empty')
     return
   }
-  addPost(name.value || 'anonymous', msg.value)
-  name.value = ''
+  addPost(msg.value)
   msg.value = ''
 }
+
+function enter (e) {
+  if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
+    submit()
+  }
+}
+
+function login () {
+  var username = document.getElementById('username').value
+  var password = document.getElementById('password').value
+  firebase.auth().signInWithEmailAndPassword(username, password).catch(err => console.log(err.errorMessage))
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    document.getElementById('hide').style.display = 'block'
+    document.getElementById('user').innerText = 'hello, ' + user.email
+    document.getElementById('log').style.display = 'none'
+  } else {
+    console.log('not logged in yet.')
+  }
+})
