@@ -1,3 +1,4 @@
+const md = window.markdownit()
 const config = {
   databaseURL: "https://jackslowfuck.firebaseio.com/"
 }
@@ -23,14 +24,16 @@ function displayPosts () {
 
 function createFieldset (post, id) {
   var lgdom = document.createElement('legend')
-  var a = document.createElement('a')
-  a.href = '#' + id
-  a.innerText = '#' + id
-  lgdom.appendChild(a)
-  var text = document.createTextNode(' | ' + post.name + ' | ' + timeStampToLocalTime(post.date))
-  lgdom.appendChild(text)
+  // var a = document.createElement('a')
+  // a.href = '#' + id
+  // a.innerText = '#' + id
+  // lgdom.appendChild(a)
+  // var text = document.createTextNode(' | ' + post.name + ' | ' + timeStampToLocalTime(post.date))
+  // lgdom.appendChild(text)
+  lgdom.innerText = '#' + id + ' | ' + post.name + ' | ' + timeStampToLocalTime(post.date)
   var p = document.createElement('p')
-  p.innerText = post.message
+  // p.innerText = post.message
+  p.innerHTML = md.render(post.message)
   var fsdom = document.createElement('fieldset')
   fsdom.id = String(id)
   fsdom.appendChild(lgdom)
