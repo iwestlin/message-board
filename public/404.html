@@ -2,76 +2,60 @@
 <html>
 
 <head>
-    <title>Talk to Wallace</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <base target="_blank" />
-    <style type="text/css">
-    body {
-        max-width: 900px;
-        margin: 0 auto;
-        margin-bottom: 10px;
-    }
-
-    fieldset {
-        margin-top: 10px;
-        padding: 0 10px;
-        border: 1px dashed #777;
-    }
-
-    legend {
-        padding: 0 5px;
-        font-style: italic;
-        font-size: 0.8em;
-        color: #666;
-    }
-
-    a {
-        text-decoration: none;
-        color: cornflowerblue;
-    }
-
-    #msg {
-        width: 99%;
-        margin-top: 10px;
-        display: inline-block;
-    }
-
-    #name {
-        width: 20%;
-    }
-
-    #talk {
-        text-align: center;
-    }
-
-    #log,
-    #user,
-    #talk {
-      display: none;
-    }
-    </style>
+  <title>Talk to Wallace</title>
+  <meta charset="utf-8">
+  <base target="_blank" />
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="github-markdown.css">
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
-    <span id="log">
-    <input type="text" id="username" placeholder="username">
-    <input type="text" id="password" placeholder="password">
-    <button onclick="login()">login</button>
-  </span>
-    <span id="user"></span>
-    <div id="talk">
-        <textarea name="msg" id="msg" rows="5" placeholder="Talk here, markdown supported.
-Notice: you need to cross THE WALL before you can talk to Wallace..."></textarea>
-        <input type="text" name="name" id="name" placeholder="Who talk to Wallace?" onkeypress="enter(event)">
-        <button onclick="submit()">talk</button>
-    </div>
-    <div id="container"></div>
-    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
-    <script src="./markdown-it.min.js"></script>
-    <script src="./main.js"></script>
+  <div id="container"></div>
+  <script src="markdown-it.min.js"></script>
+  <script src="axios.min.js"></script>
+  <script>
+  const md = window.markdownit()
+  const link = 'http://172.96.215.29:3333/talk'
+  displayPosts()
+
+  function displayPosts() {
+    var div = document.getElementById('container')
+    var fragment = document.createDocumentFragment()
+    axios.get(link).then(res => {
+      div.innerHTML = ''
+      var posts = res.data
+      posts = objToArray(posts)
+      posts.sort((x, y) => Number(y.date) - Number(x.date))
+      posts.forEach((post, index) => {
+        fragment.appendChild(createFieldset(post, posts.length - index))
+      })
+      div.appendChild(fragment)
+    })
+  }
+
+  function createFieldset(post, id) {
+    var lgdom = document.createElement('legend')
+    lgdom.innerText = '#' + id + ' | ' + timestampToLocalTime(post.date)
+    var p = document.createElement('p')
+    p.innerHTML = md.render(post.message)
+    var fsdom = document.createElement('fieldset')
+    fsdom.id = String(id)
+    fsdom.appendChild(lgdom)
+    fsdom.appendChild(p)
+    return fsdom
+  }
+
+  function timestampToLocalTime(n) {
+    n = parseInt(n) || 0
+    var d = new Date(n)
+    return d.toLocaleDateString() + ' ' + d.toTimeString().split(' ')[0]
+  }
+
+  function objToArray(o) {
+    return Object.keys(o || {}).map(key => o[key])
+  }
+  </script>
 </body>
 
 </html>

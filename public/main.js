@@ -39,7 +39,7 @@ function createFieldset (post, id) {
 function timeStampToLocalTime (n) {
   n = parseInt(n) || 0
   var d = new Date(n)
-  return d.toLocaleString()
+  return d.toLocaleDateString() + ' ' + d.toTimeString().split(' ')[0]
 }
 
 function objToArray (o) {
