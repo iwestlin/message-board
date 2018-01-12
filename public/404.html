@@ -23,16 +23,18 @@
   <script src="markdown-it.min.js"></script>
   <script src="axios.min.js"></script>
   <script src="utils.js"></script>
+  <script src="spin.min.js"></script>
   <script>
   let isLoading = false
   let sum = 0
   let pageIndex = 1
   const limit = 50
   const md = window.markdownit()
+  const spinner = new Spinner({position: 'fixed'}).spin()
   const link = `https://dataservice.viegg.com/talk?limit=${limit}&page=`
   const signal = document.querySelector('.infinite-scroll-signal')
   displayPosts()
-  window.addEventListener('scroll', utils.throttle(loadPosts, 200))
+  window.addEventListener('scroll', _.throttle(loadPosts, 200))
   // reverseChildNodes(document.getElementById('container'))
 
   function shouldLoad () {
@@ -49,10 +51,13 @@
   function loadPosts () {
     if (shouldLoad()) {
       isLoading = true
+      spinner.spin()
+      document.body.appendChild(spinner.el)
       axios.get(link + (pageIndex + 1)).then(data => {
         appendPosts(data.data)
         isLoading = false
         pageIndex += 1
+        spinner.stop()
       })
     }
   }
