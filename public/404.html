@@ -20,25 +20,43 @@
 <body>
   <div id="container"></div>
   <div class="infinite-scroll-signal"></div>
+  <!-- <button onclick="reverseChildNodes(document.getElementById('container'))">按时间顺序排列</button> -->
+
   <script src="markdown-it.min.js"></script>
   <script src="axios.min.js"></script>
   <script src="utils.js"></script>
   <script src="spin.min.js"></script>
   <script>
   let isLoading = false
-  let sum = 0
+  let pageSum = 0
   let pageIndex = 1
-  const limit = 50
+  const LIMIT = 50
+  const LINK = `https://dataservice.viegg.com/talk?limit=${LIMIT}&page=`
+
   const md = window.markdownit()
   const spinner = new Spinner({position: 'fixed'}).spin()
-  const link = `https://dataservice.viegg.com/talk?limit=${limit}&page=`
   const signal = document.querySelector('.infinite-scroll-signal')
-  displayPosts()
+
+  init()
   window.addEventListener('scroll', _.throttle(loadPosts, 200))
-  // reverseChildNodes(document.getElementById('container'))
+
+  function init () {
+    spinner.spin()
+    document.body.appendChild(spinner.el)
+    axios.get(LINK).then(res => {
+      var posts = res.data
+      if (posts.length) {
+        pageSum = posts[0].id
+        appendPosts(posts)
+      }
+    }).catch(err => {
+      console.log(err)
+      alert('服务器：今天算是得罪你们一下')
+    })
+  }
 
   function shouldLoad () {
-    if (isLoading || (Math.ceil(sum / limit) <= pageIndex)) {
+    if (isLoading || (Math.ceil(pageSum / LIMIT) <= pageIndex)) {
       return false
     } else {
       const rect = signal.getBoundingClientRect()
@@ -53,11 +71,10 @@
       isLoading = true
       spinner.spin()
       document.body.appendChild(spinner.el)
-      axios.get(link + (pageIndex + 1)).then(data => {
+      axios.get(LINK + (pageIndex + 1)).then(data => {
         appendPosts(data.data)
         isLoading = false
         pageIndex += 1
-        spinner.stop()
       })
     }
   }
@@ -68,28 +85,8 @@
     posts.forEach(post => {
       fragment.appendChild(createFieldset(post))
     })
+    spinner.stop()
     container.appendChild(fragment)
-  }
-
-  function displayPosts() {
-    axios.get(link).then(res => {
-      var posts = objToArray(res.data)
-      if (posts.length) {
-        sum = posts[0].id
-        appendPosts(posts)
-      }
-    }).catch(err => {
-      console.log(err)
-      alert('服务器无响应')
-    })
-  }
-
-  function reverseChildNodes (node) {
-    var frag = node.ownerDocument.createDocumentFragment()
-    while (node.lastChild) {
-      frag.appendChild(node.lastChild)
-    }
-    node.appendChild(frag)
   }
 
   function createFieldset(post) {
@@ -111,8 +108,12 @@
     return d.toLocaleDateString() + ' ' + d.toTimeString().split(' ')[0]
   }
 
-  function objToArray(o) {
-    return Object.keys(o || {}).map(key => o[key])
+  function reverseChildNodes (node) {
+    var frag = node.ownerDocument.createDocumentFragment()
+    while (node.lastChild) {
+      frag.appendChild(node.lastChild)
+    }
+    node.appendChild(frag)
   }
   </script>
 </body>
