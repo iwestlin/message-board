@@ -64,9 +64,12 @@ function submit () {
   msg.value = ''
 }
 
-function enter (e) {
+function handleType (e, that) {
   if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
     submit()
+  }
+  if (that.scrollTop > 0) {
+    that.rows += 1
   }
 }
 
