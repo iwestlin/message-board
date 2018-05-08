@@ -5,9 +5,10 @@ body {
 }
 
 fieldset {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 0 10px;
   border: 1px dashed #777;
+  border-radius: 5px;
 }
 
 legend {
@@ -20,6 +21,19 @@ legend {
 a {
   text-decoration: none;
   color: cornflowerblue;
+}
+
+a:hover {
+  color: blue;
+  text-decoration: underline !important;
+}
+
+a:visited {
+  color: blueviolet;
+}
+
+#container img {
+  margin: 0 auto;
 }
 
 #msg {
@@ -35,6 +49,7 @@ a {
 #talk {
   text-align: center;
 }
+
 pre code {
   white-space: pre-wrap;
   word-wrap: break-word;

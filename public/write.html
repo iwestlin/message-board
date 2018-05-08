@@ -18,6 +18,7 @@
 </head>
 <body>
   <div id="hide">
+    <button onclick="submit()">submit</button>
     <span id="log">
       <input type="text" id="username" name="username" placeholder="username">
       <input type="password" id="password" name="password" placeholder="password">
@@ -25,7 +26,7 @@
     </span>
     <span id="user"></span>
     <div id="talk">
-      <textarea name="msg" id="msg" rows="5" onkeydown="handleType(event, this)" placeholder="You need to cross THE WALL before you can talk to Wallace..."></textarea>
+      <textarea name="msg" id="msg" rows="5" onkeydown="handleType(event, this)" placeholder=""></textarea>
     </div>
   </div>
   <div id="container"></div>
